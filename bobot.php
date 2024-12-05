@@ -1,4 +1,12 @@
 <?php
+
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+
 include 'template/head.php';
 include 'template/nav-top.php';
 include 'template/nav-side.php';
@@ -35,7 +43,9 @@ include 'template/nav-side.php';
                     </div>
                     <!-- Tabel alternatif -->
                     <div class="card-body">
+                        <?php if ($_SESSION['is_admin'] == 1) { ?>
                         <button type="button" class="btn btn-info mb-3" data-toggle="modal" data-target="#addModal"><i class="far fa-plus-square"></i> Tambah Data</button>
+                        <?php } ?>
                         <!-- Modal -->
                         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -126,8 +136,10 @@ include 'template/nav-side.php';
                                         <td><?= $data['c4']; ?></td>
                                         <td><?= $data['c5']; ?></td>
                                         <td align="center">
+                                            <?php if ($_SESSION['is_admin'] == 1) { ?>
                                             <button type="button" class="btn btn-warning sm" data-toggle="modal" data-target="#editModal<?= $data['id_bobot']; ?>"><i class="far fa-edit"></i></button>
                                             <button type="button" class="btn btn-danger sm" data-toggle="modal" data-target="#deleteModal<?= $data['id_bobot']; ?>"><i class="far fa-trash-alt"></i></button>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                     <!-- Modal edit -->
@@ -224,7 +236,7 @@ include 'template/nav-side.php';
 
 <?php
 // tambah data tabel bobot
-if (isset($_POST['add_bobot'])) {
+if (isset($_POST['add_bobot']) && $_SESSION['is_admin'] == 1) {
     $id = $_POST['id_alternatif'];
     $c1 = $_POST['c1'];
     $c2 = $_POST['c2'];
@@ -257,7 +269,7 @@ if (isset($_POST['add_bobot'])) {
 }
 
 // edit data bobot
-if (isset($_POST['edit_bobot'])) {
+if (isset($_POST['edit_bobot']) && $_SESSION['is_admin'] == 1) {
     $idbobot = $_POST['idbobot'];
     $c1 = $_POST['c1'];
     $c2 = $_POST['c2'];
@@ -280,7 +292,7 @@ if (isset($_POST['edit_bobot'])) {
 }
 
 // fungsi delete tabel alternatif
-if (isset($_POST['delete_id'])) {
+if (isset($_POST['delete_id']) && $_SESSION['is_admin'] == 1) {
     $id = $_POST['idbobot'];
     mysqli_query($koneksi, "DELETE FROM bobot WHERE id_bobot=$id");
     if (mysqli_affected_rows($koneksi) > 0) {

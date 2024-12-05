@@ -1,4 +1,17 @@
 <?php
+session_start();
+include 'koneksi.php';
+
+// Check if user is logged in and is an admin
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != 1) {
+    // If not an admin, redirect to a different page or show an error message
+    echo "<script>
+        alert('You do not have permission to access this page.');
+        document.location.href = 'index.php';
+        </script>";
+    exit;
+}
+
 include 'template/head.php';
 include 'template/nav-top.php';
 include 'template/nav-side.php';
@@ -35,8 +48,10 @@ include 'template/nav-side.php';
                     </div>
                     <!-- Tabel alternatif -->
                     <div class="card-body">
+                        <?php if ($_SESSION['is_admin'] == 1) { ?>
                         <!-- Button trigger modal -->
                         <button type="button" class="btn btn-info mb-3" data-toggle="modal" data-target="#addModal"><i class="far fa-plus-square"></i> Tambah Data</button>
+                        <?php } ?>
                         <!-- Modal -->
                         <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -79,7 +94,6 @@ include 'template/nav-side.php';
                             </thead>
                             <tbody>
                                 <?php
-                                include 'koneksi.php';
                                 $no = 1;
                                 $sql = mysqli_query($koneksi, "SELECT * FROM alternatif");
                                 while ($data = mysqli_fetch_assoc($sql)) {
@@ -89,8 +103,10 @@ include 'template/nav-side.php';
                                         <td><?= $data['code']; ?></td>
                                         <td><?= $data['alternatif']; ?></td>
                                         <td align="center">
+                                            <?php if ($_SESSION['is_admin'] == 1) { ?>
                                             <button type="button" class="btn btn-warning sm" data-toggle="modal" data-target="#editModal<?= $data['id_alter']; ?>"><i class="far fa-edit"></i></button>
                                             <button type="button" class="btn btn-danger sm" data-toggle="modal" data-target="#deleteModal<?= $data['id_alter']; ?>"><i class="far fa-trash-alt"></i></button>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                     <!--  -->
@@ -201,7 +217,9 @@ include 'template/nav-side.php';
                                         <td><?= $data['jenis']; ?></td>
                                         <td><?= $data['bobot']; ?></td>
                                         <td align="center">
+                                            <?php if ($_SESSION['is_admin'] == 1) { ?>
                                             <button class="btn btn-warning sm" data-toggle="modal" data-target="#editKriteria<?= $data['id']; ?>"><i class="far fa-edit"></i></button>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                     <!-- modal edit data kriteria -->
@@ -270,7 +288,7 @@ include 'template/nav-side.php';
 
 <?php
 // Fungsi tambah data alternatif
-if (isset($_POST['add_alternatif'])) {
+if (isset($_POST['add_alternatif']) && $_SESSION['is_admin'] == 1) {
     $code = $_POST['kode_alternatif'];
     $alternatif = $_POST['nama_alternatif'];
     mysqli_query($koneksi, "INSERT INTO alternatif VALUES(NULL,'$code','$alternatif')");
@@ -289,7 +307,7 @@ if (isset($_POST['add_alternatif'])) {
 }
 
 // Fungsi edit data alternatif
-if (isset($_POST['edit_alternatif'])) {
+if (isset($_POST['edit_alternatif']) && $_SESSION['is_admin'] == 1) {
     $id = $_POST['id'];
     $code = $_POST['kode_alternatif'];
     $alternatif = $_POST['nama_alternatif'];
@@ -308,7 +326,7 @@ if (isset($_POST['edit_alternatif'])) {
 }
 
 // fungsi delete tabel alternatif
-if (isset($_POST['delete_id'])) {
+if (isset($_POST['delete_id']) && $_SESSION['is_admin'] == 1) {
     $id = $_POST['id'];
     mysqli_query($koneksi, "DELETE FROM alternatif WHERE id_alter=$id");
     if (mysqli_affected_rows($koneksi) > 0) {
@@ -325,7 +343,7 @@ if (isset($_POST['delete_id'])) {
 }
 
 // fungsi edit kriteria
-if (isset($_POST['edit_kriteria'])) {
+if (isset($_POST['edit_kriteria']) && $_SESSION['is_admin'] == 1) {
     $id = $_POST['id'];
     $code = $_POST['kode_kriteria'];
     $kriteria = $_POST['nama_kriteria'];
