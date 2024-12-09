@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 04, 2024 at 03:44 PM
+-- Generation Time: Dec 09, 2024 at 08:27 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.13
 
@@ -105,6 +105,28 @@ INSERT INTO `kriteria` (`id`, `code`, `kriteria`, `jenis`, `bobot`) VALUES
 (4, 'C4', 'Sanitas dan Kebersihan', 'benefit', 3),
 (5, 'C5', 'Akreditasi Sekolah', 'benefit', 3);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int NOT NULL,
+  `username` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `is_admin` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `is_admin`) VALUES
+(1, 'user1', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'user1@gmail.com', 0),
+(2, 'admin', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 'admin@gmail.com', 1);
+
 --
 -- Indexes for dumped tables
 --
@@ -129,6 +151,14 @@ ALTER TABLE `kriteria`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -149,6 +179,12 @@ ALTER TABLE `bobot`
 --
 ALTER TABLE `kriteria`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
